@@ -1,0 +1,32 @@
+whale_ear
+Copyright 2026 Lori0118 (洛蕊Lori)
+
+This product includes software developed at
+Spotify AB (https://github.com/spotify/basic-pitch), licensed under
+the Apache License, Version 2.0.
+
+This product includes a quantized (int8) ONNX conversion of the
+basic-pitch model. The conversion was produced by ALittleLov
+(dsh-soundcheck, https://github.com/ALittleLov/dsh-soundcheck) and is
+redistributed here as a derivative work of the original basic-pitch
+model, under the same Apache License, Version 2.0.
+
+  - Original model: basic-pitch (ICASSP 2022), Spotify AB
+  - Original repository: https://github.com/spotify/basic-pitch
+  - Conversion to ONNX / int8 quantization: ALittleLov (dsh-soundcheck)
+  - Converter repository: https://github.com/ALittleLov/dsh-soundcheck
+  - Modifications: the model weights were converted from the original
+    TensorFlow checkpoint to ONNX and quantized to int8. The file
+    provided here (models/nmp.onnx, ~225 KB) is that derivative.
+
+This product additionally depends on the following third-party software,
+each governed by its own license:
+
+  - librosa (ISC License)
+  - soundfile (BSD 3-Clause)
+  - numpy (BSD 3-Clause)
+  - scipy (BSD 3-Clause)
+  - onnxruntime (MIT License)
+  - pretty_midi (MIT License)
+  - demucs-onnx / htdemucs-onnx weights (see upstream project;
+    weights are downloaded at runtime and are not bundled here)

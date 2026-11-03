@@ -1,0 +1,29 @@
+# 输出与中间产物
+out/
+outputs/
+*.mid
+*.abc
+
+# 模型：只保留 nmp.onnx，其余不入库
+models/*
+!models/nmp.onnx
+*.onnx
+!models/nmp.onnx
+
+# 音频素材（示例除外）
+*.mp3
+*.m4a
+*.flac
+*.ogg
+!examples/*.mp3
+!examples/*.wav
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# 系统
+.DS_Store
+Thumbs.db
