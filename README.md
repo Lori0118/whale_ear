@@ -19,6 +19,9 @@ whale_ear 多走一步：把歌变成**可以逐条质证的数据**，让模型
 | `ear.py` | 音频 → 音符事件 → 量化 → MIDI / ABC / 文本摘要 | `.mid` `.abc` `.json` `-摘要.txt` |
 | `harmony.py` | 和弦、调性、段落色彩 | 文本 |
 | `voice.py` | 「怎么唱」：颤音速率与幅度、谐噪比、频谱倾斜、动态范围、音域、峰均比 | 文本 |
+| `mcp_server.py` | 把上面三个包成 MCP 工具，给智能体直接调用 | JSON-RPC |
+
+还有一份 `SKILL.md`：**教智能体怎么读这些数字**——哪几项可以信、哪几项容易误判、同一个结论至少要两个独立来源。工具给数据，这份文件管判读。
 
 设计上刻意不做两件事：
 - **不输出整首歌的逐音符 JSON**（一首歌几万条，模型读不动）；按小节聚合成 ABC 骨架 + 每 4 小节一段文字摘要。
@@ -46,7 +49,40 @@ export WHALE_EAR_MODEL=/path/to/nmp.onnx
 
 找不到模型时会直接报错并提示，不会静默降级。
 
-分轨（`--stem`）依赖 `demucs-onnx`，首次运行会自己下载 htdemucs 权重。
+分轨（`--stem`）依赖 `demucs-onnx`（不在默认依赖里，按需装）：
+
+```bash
+pip install demucs-onnx
+```
+
+首次运行会自己下载 htdemucs 权重。
+
+---
+
+## 先花两分钟确认它能跑
+
+```bash
+python ear.py examples/test-chords.wav      # 应该出 out/test-chords/ 下的 mid + abc + 摘要
+python harmony.py examples/test-happybirthday.wav
+python voice.py examples/test-happybirthday.wav
+```
+
+三条都能出结果，环境就对了。若在 `write_midi` 处报 `ModuleNotFoundError: pretty_midi`，
+说明 `pip install -r requirements.txt` 没跑全。
+
+---
+
+## 给智能体用：MCP
+
+`mcp_server.py` 用标准库手写换行分隔的 JSON-RPC，不依赖 `mcp` SDK，Python 3.8+ 就能跑。
+注册三个工具：`ear_transcribe` / `ear_voice` / `ear_harmony`，内部调对应脚本并回传文本。
+
+```bash
+python mcp_server.py        # 走 stdio，交给宿主去握手
+```
+
+接上之后，模型可以直接要「这首歌的和弦走向」，而不是让人把输出复制进来。
+但**别指望它自己会判读**——判读规则在 `SKILL.md`，两边要一起给。
 
 ---
 
